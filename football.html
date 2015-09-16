@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Gamedev Canvas Workshop</title>
+
+    <style>
+    canvas { background: #eee; }
+    </style>
+</head>
+<body>
+<canvas id="myCanvas" width="320" height="480"></canvas>
+
+</body>
+    <script>
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var x = canvas.width/2;
+var y = canvas.height/2;
+var ballRadius = 6;
+var dx = 2;
+var dy = -2;
+var m = 0;
+var j = 0;
+var paddleHeight = 10;
+var paddleWidth = 25;
+var paddleX = (canvas.width-paddleWidth);
+var rightPressed = false;
+var leftPressed = false;
+var brickRowCount = 3;
+var brickColumnCount = 5;
+var brickWidth = 75;
+var brickHeight = 20;
+var brickPadding = 10;
+var brickOffsetTop = 30;
+var brickOffsetLeft = 30;
+var bricks = [];
+var goalpostWidth = 75;
+var goalpostHeight = 10;
+var homeScore = 0;
+var awayScore = 0;
+var rightPressedAway = false;
+var leftPressedAway = false;
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+function drawBall() {
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+   
+    if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+    dx = -dx;
+    }
+    if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
+        dy = -dy;
+    }
+
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //drawBall();
+    drawPlayers();
+    drawGoalPost();
+    console.log('Home: ', homeScore, 'Away: ', awayScore);
+    x += dx;
+    y += dy;
+    if(rightPressed && paddleX*7/8 + m < canvas.width-paddleWidth) {
+        m += 7;
+    }
+    else if(leftPressed && paddleX*1/8 + m > 0) {
+        m -= 7;
+    }
+    else if(rightPressedAway && paddleX*7/8 + j < canvas.width-paddleWidth) {
+        j += 7;
+    }
+    else if(leftPressedAway && paddleX*1/8 + j > 0) {
+        j -= 7;
+    }
+}
+
+function updateScore(goal) {
+
+    if(goal === 'home') {
+        awayScore += 1;
+    }
+    else {
+        homeScore += 1;
+    }
+}
+
+function resetBall() {
+    x = canvas.height/2;
+    y = canvas.width/2;
+}
+
+function drawGoalPost() {
+
+    //home
+    ctx.beginPath();
+    var gphX = paddleX/2;
+    var gphY = canvas.height - goalpostHeight;
+    ctx.rect(gphX, gphY, goalpostWidth, goalpostHeight);
+    ctx.fillStyle = "#9C9C9C";
+    ctx.fill();
+    ctx.closePath();
+    if(y == gphY && (x > gphX && x < gphX + goalpostWidth)) {
+        updateScore('home');
+        resetBall();
+    }
+
+    //away
+    ctx.beginPath();
+    var gpaX = paddleX/2;
+    var gpaY = paddleHeight;
+    ctx.rect(gpaX, gpaY, goalpostWidth, goalpostHeight);
+    ctx.fillStyle = "#9C9C9C";
+    ctx.fill();
+    ctx.closePath();
+    if(y == gpaY && (x > gpaX && x < gpaX + goalpostWidth)) {
+        updateScore('away');
+        resetBall();
+    }
+}
+
+function drawGoalkeeper() {
+
+    ctx.beginPath();
+    var gkX = paddleX/2 + m;
+    var gkY = canvas.height*7/8-paddleHeight;
+    ctx.rect(gkX, gkY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == gkY) && (x > gkX && x < gkX + paddleWidth) && dy >= 0) {
+        dy = -dy;
+    }
+}
+
+function drawDefenders() {
+
+    ctx.beginPath();
+    var lcbX = paddleX/4 + m;
+    var lcbY = canvas.height*13/16-paddleHeight;
+    ctx.rect(lcbX, lcbY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == lcbY) && (x > lcbX && x < lcbX + paddleWidth) && dy >= 0) {
+        if(dy<= 0)
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var rcbX = paddleX*3/4 + m;
+    var rcbY = canvas.height*13/16-paddleHeight;
+    ctx.rect(rcbX, rcbY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == rcbY) && (x > rcbX && x < rcbX + paddleWidth) && dy >= 0) {
+        dy = -dy;
+    }
+}
+
+function drawMidfielders() {
+
+    //midfielders
+    ctx.beginPath();
+    var lwbX = paddleX*1/8 + m;
+    var lwbY = canvas.height*5/8-paddleHeight;
+    ctx.rect(lwbX, lwbY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == lwbY) && (x > lwbX && x < lwbX + paddleWidth) && dy >= 0) {
+        dy = -dy;
+    }
+
+
+    ctx.beginPath();
+    var lcmX = paddleX*3/8 + m;
+    var lcmY = canvas.height*5/8-paddleHeight;
+    ctx.rect(lcmX, lcmY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == lcmY) && (x > lcmX && x < lcmX + paddleWidth) && dy >= 0) {
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var rcmX = paddleX*5/8 + m;
+    var rcmY = canvas.height*5/8-paddleHeight;
+    ctx.rect(rcmX, rcmY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == rcmY) && (x > rcmX && x < rcmX + paddleWidth) && dy >= 0) {
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var rwbX = paddleX*7/8 + m;
+    var rwbY = canvas.height*5/8-paddleHeight;
+    ctx.rect(rwbX, rwbY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == rwbY) && (x > rwbX && x < rwbX + paddleWidth) && dy >= 0) {
+        dy = -dy;
+    }
+  
+}
+
+function drawStrikers() {
+        //attackers
+    ctx.beginPath();
+    var lwX = paddleX/4 + m;
+    var lwY = canvas.height*9/32-paddleHeight;
+    ctx.rect(lwX, lwY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == lwY) && (x > lwX && x < lwX + paddleWidth) && dy >= 0) {
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var cfX = paddleX/2 + m;
+    var cfY = canvas.height*9/32-paddleHeight;
+    ctx.rect(cfX, cfY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == cfY) && (x > cfX && x < cfX + paddleWidth) && dy >= 0) {
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var rwX = paddleX*3/4 + m;
+    var rwY = canvas.height*9/32-paddleHeight;
+    ctx.rect(rwX, rwY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    if((y == rwY) && (x > rwX && x < rwX + paddleWidth) && dy >= 0) {
+        dy = -dy;
+    }
+}
+function drawPlayers() {
+
+    //home
+    drawGoalkeeper();
+    drawDefenders();
+    drawMidfielders();
+    drawStrikers();
+
+    //away
+    drawAwayGoalkeeper();
+    drawAwayDefenders();
+    drawAwayMidfielders();
+    drawAwayStrikers();
+}
+
+function drawAwayGoalkeeper() {
+
+    ctx.beginPath();
+    var gkX = paddleX/2 + j;
+    var gkY = canvas.height*1/8-paddleHeight;
+    ctx.rect(gkX, gkY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == gkY) && (x > gkX && x < gkX + paddleWidth) && dy <= 0) {
+        dy = -dy;
+    }
+}
+
+function drawAwayDefenders() {
+
+    ctx.beginPath();
+    var lcbX = paddleX/4 + j;
+    var lcbY = canvas.height*3/16-paddleHeight;
+    ctx.rect(lcbX, lcbY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == lcbY) && (x > lcbX && x < lcbX + paddleWidth) && dy <= 0) {
+        if(dy<= 0)
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var rcbX = paddleX*3/4 + j;
+    var rcbY = canvas.height*3/16-paddleHeight;
+    ctx.rect(rcbX, rcbY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == rcbY) && (x > rcbX && x < rcbX + paddleWidth) && dy <= 0) {
+        dy = -dy;
+    }
+}
+
+function drawAwayMidfielders() {
+
+    //midfielders
+    ctx.beginPath();
+    var lwbX = paddleX*1/8 + j;
+    var lwbY = canvas.height*3/8-paddleHeight;
+    ctx.rect(lwbX, lwbY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == lwbY) && (x > lwbX && x < lwbX + paddleWidth) && dy <= 0) {
+        dy = -dy;
+    }
+
+
+    ctx.beginPath();
+    var lcmX = paddleX*3/8 + j;
+    var lcmY = canvas.height*3/8-paddleHeight;
+    ctx.rect(lcmX, lcmY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == lcmY) && (x > lcmX && x < lcmX + paddleWidth) && dy <= 0) {
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var rcmX = paddleX*5/8 + j;
+    var rcmY = canvas.height*3/8-paddleHeight;
+    ctx.rect(rcmX, rcmY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == rcmY) && (x > rcmX && x < rcmX + paddleWidth) && dy <= 0) {
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var rwbX = paddleX*7/8 + j;
+    var rwbY = canvas.height*3/8-paddleHeight;
+    ctx.rect(rwbX, rwbY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == rwbY) && (x > rwbX && x < rwbX + paddleWidth) && dy <= 0) {
+        dy = -dy;
+    }
+  
+}
+
+function drawAwayStrikers() {
+        //attackers
+    ctx.beginPath();
+    var lwX = paddleX/4 + j;
+    var lwY = canvas.height*23/32-paddleHeight;
+    ctx.rect(lwX, lwY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == lwY) && (x > lwX && x < lwX + paddleWidth) && dy <= 0) {
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var cfX = paddleX/2 + j;
+    var cfY = canvas.height*23/32-paddleHeight;
+    ctx.rect(cfX, cfY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == cfY) && (x > cfX && x < cfX + paddleWidth) && dy <= 0) {
+        dy = -dy;
+    }
+
+    ctx.beginPath();
+    var rwX = paddleX*3/4 + j;
+    var rwY = canvas.height*23/32-paddleHeight;
+    ctx.rect(rwX, rwY, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#E03333";
+    ctx.fill();
+    ctx.closePath();
+    if((y == rwY) && (x > rwX && x < rwX + paddleWidth) && dy <= 0) {
+        dy = -dy;
+    }
+}
+
+function keyDownHandler(e) {
+    if(e.keyCode == 39) {
+        rightPressed = true;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = true;
+    }
+    else if(e.keyCode == 65) {
+        leftPressedAway = true; 
+    }
+    else if(e.keyCode == 68) {
+        rightPressedAway = true;
+    }
+}
+
+function keyUpHandler(e) {
+    if(e.keyCode == 39) {
+        rightPressed = false;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = false;
+    }
+    else if(e.keyCode == 65) {
+        leftPressedAway = false; 
+    }
+    else if(e.keyCode == 68) {
+        rightPressedAway = false;
+    }
+}
+setInterval(draw, 10);
+    </script>
+</html>
