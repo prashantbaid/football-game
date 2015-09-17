@@ -36,8 +36,8 @@ var ctx = canvas.getContext("2d");
 var x = canvas.width/2;
 var y = canvas.height/2;
 var ballRadius = 6;
-var dx = 1.5;
-var dy = -1.5;
+var dx = 1;
+var dy = -1;
 var m = 0;
 var j = 0;
 var paddleHeight = 10;
@@ -59,16 +59,24 @@ var homeScore = 0;
 var awayScore = 0;
 var rightPressedAway = false;
 var leftPressedAway = false;
-console.log(canvas.height);
+//console.log(canvas.height);
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
 function drawBall() {
-    ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-    ctx.fillStyle = "#030303";
-    ctx.fill();
-    ctx.closePath();
+     ctx.beginPath();
+     ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+     ctx.fillStyle = "#030303";
+     ctx.fill();
+     ctx.closePath();
+
+    // ctx.beginPath();
+    // //var gphX = paddleX/2;
+    // //var gphY = canvas.height - goalpostHeight;
+    // ctx.rect(x, y, ballRadius, ballRadius);
+    // ctx.fillStyle = "#030303";
+    // ctx.fill();
+    // ctx.closePath();
    
     if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
     dx = -dx;
@@ -85,14 +93,14 @@ function draw() {
     drawBall();
     drawPlayers();
     drawGoalPost();
-    console.log('Home: ', homeScore, 'Away: ', awayScore);
+  //  console.log('Home: ', homeScore, 'Away: ', awayScore);
     x += dx;
     y += dy;
     if(rightPressed && paddleX*7/8 + m < canvas.width-paddleWidth) {
-        m += 15;  
+        m += 2;  
     }
     else if(leftPressed && paddleX*1/8 + m > 0) {
-        m -= 15;
+        m -= 2;
     }
     // else if(x > canvas.width/2 && paddleX*7/8 + j < canvas.width-paddleWidth) {
     //     j += 15;
@@ -162,7 +170,7 @@ function drawGoalkeeper() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX - 2 && x < gkX + paddleWidth + 2) ) {
+    if((y + ballRadius>= gkY && y + ballRadius< gkY + paddleHeight) && (x > gkX  && x < gkX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -180,7 +188,7 @@ function drawDefenders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcbY && y < lcbY + paddleHeight) && (x > lcbX - 5 && x < lcbX + paddleWidth + 5) ) {
+    if((y + ballRadius>= lcbY && y + ballRadius< lcbY + paddleHeight) && (x > lcbX  && x < lcbX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -194,7 +202,7 @@ function drawDefenders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= rcbY && y < rcbY + paddleHeight) && (x > rcbX - 5 && x < rcbX + paddleWidth + 5) ) {
+    if((y + ballRadius>= rcbY && y + ballRadius< rcbY + paddleHeight) && (x > rcbX  && x < rcbX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -212,7 +220,7 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= lwbY && y < lwbY + paddleHeight) && (x > lwbX - 5  && x < lwbX + paddleWidth + 5) ) {
+    if((y + ballRadius>= lwbY  && y + ballRadius < lwbY + paddleHeight) && (x > lwbX   && x < lwbX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -227,7 +235,7 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcmY && y < lcmY + paddleHeight) && (x > lcmX - 5 && x < lcmX + paddleWidth + 5) ) {
+    if((y + ballRadius >= lcmY && y + ballRadius < lcmY + paddleHeight) && (x > lcmX  && x < lcmX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -241,7 +249,7 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rcmX - 5 && x < rcmX + paddleWidth + 5) ) {
+    if((y + ballRadius >= lcmY && y + ballRadius < lcmY + paddleHeight) && (x > rcmX  && x < rcmX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -255,7 +263,7 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rwbX - 5 && x < rwbX + paddleWidth + 5) ) {
+    if((y + ballRadius >= lcmY && y+ ballRadius< lcmY + paddleHeight) && (x > rwbX  && x < rwbX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -273,7 +281,7 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= lwY && y < lwY + paddleHeight) && (x > lwX - 5 && x < lwX + paddleWidth + 5) ) {
+    if((y + ballRadius>= lwY && y + ballRadius< lwY + paddleHeight) && (x > lwX  && x < lwX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -287,7 +295,7 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= cfY && y < cfY + paddleHeight) && (x > cfX - 5 && x < cfX + paddleWidth + 5) ) {
+    if((y + ballRadius>= cfY && y + ballRadius< cfY + paddleHeight) && (x > cfX  && x < cfX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -301,7 +309,7 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= rwY && y < rwY + paddleHeight) && (x > rwX - 5 && x < rwX + paddleWidth + 5) ) {
+    if((y + ballRadius>= rwY && y + ballRadius< rwY + paddleHeight) && (x > rwX  && x < rwX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -332,7 +340,7 @@ function drawAwayGoalkeeper() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX - 5 && x < gkX + paddleWidth + 5) ) {
+    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX  && x < gkX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -340,9 +348,9 @@ function drawAwayGoalkeeper() {
     }
     if(y + 10 == gkY || y - 10 == gkY) {
         if(x > gkX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
     }
 }
 
@@ -355,7 +363,7 @@ function drawAwayDefenders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcbY && y < lcbY + paddleHeight) && (x > lcbX - 5 && x < lcbX + paddleWidth + 5) ) {
+    if((y >= lcbY && y < lcbY + paddleHeight) && (x > lcbX  && x < lcbX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -370,7 +378,7 @@ function drawAwayDefenders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= rcbY && y < rcbY + paddleHeight) && (x > rcbX - 5 && x < rcbX + paddleWidth + 5) ) {
+    if((y >= rcbY && y < rcbY + paddleHeight) && (x > rcbX  && x < rcbX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -378,13 +386,13 @@ function drawAwayDefenders() {
     }
     if(y + 10 == rcbY || y - 10 == rcbY) {
         if(x > lcbX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
         if(x > rcbX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
     }
 }
 
@@ -398,7 +406,7 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lwbY && y < lwbY + paddleHeight) && (x > lwbX - 5  && x < lwbX + paddleWidth + 5) ) {
+    if((y >= lwbY && y < lwbY + paddleHeight) && (x > lwbX   && x < lwbX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -413,7 +421,7 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcmY && y < lcmY + paddleHeight) && (x > lcmX - 5 && x < lcmX + paddleWidth + 5) ) {
+    if((y >= lcmY && y < lcmY + paddleHeight) && (x > lcmX  && x < lcmX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -427,7 +435,7 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rcmX - 5 && x < rcmX + paddleWidth + 5) ) {
+    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rcmX  && x < rcmX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -441,7 +449,7 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rwbX - 5 && x < rwbX + paddleWidth + 5) ) {
+    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rwbX  && x < rwbX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -449,21 +457,21 @@ function drawAwayMidfielders() {
     }
     if(y + 10 == rwbY || y - 10 == rwbY) {
         if(x > lwbX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
         if(x > rwbX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
         if(x > rcmX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
         if(x > lcmX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
     }
   
 }
@@ -477,7 +485,7 @@ function drawAwayStrikers() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lwY && y < lwY + paddleHeight) && (x > lwX - 5 && x < lwX + paddleWidth + 5) ) {
+    if((y >= lwY && y < lwY + paddleHeight) && (x > lwX  && x < lwX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -491,7 +499,7 @@ function drawAwayStrikers() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= cfY && y < cfY + paddleHeight) && (x > cfX - 5 && x < cfX + paddleWidth + 5) ) {
+    if((y >= cfY && y < cfY + paddleHeight) && (x > cfX  && x < cfX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -505,7 +513,7 @@ function drawAwayStrikers() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= rwY && y < rwY + paddleHeight) && (x > rwX - 5 && x < rwX + paddleWidth + 5) ) {
+    if((y >= rwY && y < rwY + paddleHeight) && (x > rwX && x < rwX + paddleWidth ) ) {
         if(dy > 0)
             dx = -dx;
         else
@@ -513,17 +521,17 @@ function drawAwayStrikers() {
 
     if(y + 10 == rwY || y - 10 == rwY) {
         if(x > lwX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
         if(x > rwX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
         if(x > cfX)
-            j +=15;
+            j +=10;
         else
-            j -=15;
+            j -=10;
     }
 
     }
