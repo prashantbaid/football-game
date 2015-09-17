@@ -5,7 +5,9 @@
     <title>Foosball Game</title>
 
     <style>
-    canvas { background: #eee; }
+    canvas { 
+        background: #27BC3F;
+     }
     #score {
         margin-left: 320px;
         margin-top: -484px;
@@ -87,17 +89,17 @@ function draw() {
     x += dx;
     y += dy;
     if(rightPressed && paddleX*7/8 + m < canvas.width-paddleWidth) {
-        m += 15;
+        m += 15;  
     }
     else if(leftPressed && paddleX*1/8 + m > 0) {
         m -= 15;
     }
-    else if(rightPressedAway && paddleX*7/8 + j < canvas.width-paddleWidth) {
-        j += 15;
-    }
-    else if(leftPressedAway && paddleX*1/8 + j > 0) {
-        j -= 15;
-    }
+    // else if(x > canvas.width/2 && paddleX*7/8 + j < canvas.width-paddleWidth) {
+    //     j += 15;
+    // }
+    // else if(x < canvas.width/2 && paddleX*1/8 + j > 0) {
+    //     j -= 15;
+    // }
 }
 
 function updateScore(goal) {
@@ -160,12 +162,13 @@ function drawGoalkeeper() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX - 5 && x < gkX + paddleWidth + 5) ) {
+    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX - 2 && x < gkX + paddleWidth + 2) ) {
         if(dy < 0)
             dx = -dx;
         else
             dy = -dy;
     }
+
 }
 
 function drawDefenders() {
@@ -335,6 +338,12 @@ function drawAwayGoalkeeper() {
         else
             dy = -dy;
     }
+    if(y + 10 == gkY || y - 10 == gkY) {
+        if(x > gkX)
+            j +=15;
+        else
+            j -=15;
+    }
 }
 
 function drawAwayDefenders() {
@@ -353,6 +362,7 @@ function drawAwayDefenders() {
             dy = -dy;
     }
 
+
     ctx.beginPath();
     var rcbX = paddleX*3/4 + j;
     var rcbY = canvas.height*3/16-paddleHeight;
@@ -365,6 +375,16 @@ function drawAwayDefenders() {
             dx = -dx;
         else
             dy = -dy;
+    }
+    if(y + 10 == rcbY || y - 10 == rcbY) {
+        if(x > lcbX)
+            j +=15;
+        else
+            j -=15;
+        if(x > rcbX)
+            j +=15;
+        else
+            j -=15;
     }
 }
 
@@ -427,6 +447,24 @@ function drawAwayMidfielders() {
         else
             dy = -dy;
     }
+    if(y + 10 == rwbY || y - 10 == rwbY) {
+        if(x > lwbX)
+            j +=15;
+        else
+            j -=15;
+        if(x > rwbX)
+            j +=15;
+        else
+            j -=15;
+        if(x > rcmX)
+            j +=15;
+        else
+            j -=15;
+        if(x > lcmX)
+            j +=15;
+        else
+            j -=15;
+    }
   
 }
 
@@ -472,6 +510,22 @@ function drawAwayStrikers() {
             dx = -dx;
         else
             dy = -dy;
+
+    if(y + 10 == rwY || y - 10 == rwY) {
+        if(x > lwX)
+            j +=15;
+        else
+            j -=15;
+        if(x > rwX)
+            j +=15;
+        else
+            j -=15;
+        if(x > cfX)
+            j +=15;
+        else
+            j -=15;
+    }
+
     }
 }
 
