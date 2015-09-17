@@ -10,7 +10,11 @@
 </head>
 <body>
 <canvas id="myCanvas" width="320" height="480"></canvas>
-
+<div id="score">
+<h3>Home : <span id="home"></span></h3>
+<br>
+<h3>Away : <span id="away"></span></h3>
+</div>
 </body>
     <script>
 var canvas = document.getElementById("myCanvas");
@@ -18,12 +22,12 @@ var ctx = canvas.getContext("2d");
 var x = canvas.width/2;
 var y = canvas.height/2;
 var ballRadius = 6;
-var dx = 2;
-var dy = -2;
+var dx = 1.5;
+var dy = -1.5;
 var m = 0;
 var j = 0;
 var paddleHeight = 10;
-var paddleWidth = 25;
+var paddleWidth = 15;
 var paddleX = (canvas.width-paddleWidth);
 var rightPressed = false;
 var leftPressed = false;
@@ -41,14 +45,14 @@ var homeScore = 0;
 var awayScore = 0;
 var rightPressedAway = false;
 var leftPressedAway = false;
-
+console.log(canvas.height);
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
 function drawBall() {
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = "#030303";
     ctx.fill();
     ctx.closePath();
    
@@ -61,25 +65,26 @@ function drawBall() {
 
 }
 
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //drawBall();
+    drawBall();
     drawPlayers();
     drawGoalPost();
     console.log('Home: ', homeScore, 'Away: ', awayScore);
     x += dx;
     y += dy;
     if(rightPressed && paddleX*7/8 + m < canvas.width-paddleWidth) {
-        m += 7;
+        m += 15;
     }
     else if(leftPressed && paddleX*1/8 + m > 0) {
-        m -= 7;
+        m -= 15;
     }
     else if(rightPressedAway && paddleX*7/8 + j < canvas.width-paddleWidth) {
-        j += 7;
+        j += 15;
     }
     else if(leftPressedAway && paddleX*1/8 + j > 0) {
-        j -= 7;
+        j -= 15;
     }
 }
 
@@ -87,9 +92,11 @@ function updateScore(goal) {
 
     if(goal === 'home') {
         awayScore += 1;
+        document.getElementById('away').innerHTML = awayScore;
     }
     else {
         homeScore += 1;
+        document.getElementById('home').innerHTML = homeScore;
     }
 }
 
@@ -108,11 +115,14 @@ function drawGoalPost() {
     ctx.fillStyle = "#9C9C9C";
     ctx.fill();
     ctx.closePath();
-    if(y == gphY && (x > gphX && x < gphX + goalpostWidth)) {
+   // if(y == canvas.height)
+       
+    if(y >= gphY && (x > gphX && x < gphX + goalpostWidth)) {
+        console.log('home scored');
         updateScore('home');
         resetBall();
     }
-
+    //console.log('called');
     //away
     ctx.beginPath();
     var gpaX = paddleX/2;
@@ -121,7 +131,9 @@ function drawGoalPost() {
     ctx.fillStyle = "#9C9C9C";
     ctx.fill();
     ctx.closePath();
-    if(y == gpaY && (x > gpaX && x < gpaX + goalpostWidth)) {
+    // alert(y + ','+ gpaY);
+    if(y <= gpaY && (x > gpaX && x < gpaX + goalpostWidth)) {
+        console.log('away scored'); 
         updateScore('away');
         resetBall();
     }
@@ -136,8 +148,11 @@ function drawGoalkeeper() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == gkY) && (x > gkX && x < gkX + paddleWidth) && dy >= 0) {
-        dy = -dy;
+    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX - 5 && x < gkX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 }
 
@@ -150,9 +165,11 @@ function drawDefenders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == lcbY) && (x > lcbX && x < lcbX + paddleWidth) && dy >= 0) {
-        if(dy<= 0)
-        dy = -dy;
+    if((y >= lcbY && y < lcbY + paddleHeight) && (x > lcbX - 5 && x < lcbX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -162,8 +179,11 @@ function drawDefenders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == rcbY) && (x > rcbX && x < rcbX + paddleWidth) && dy >= 0) {
-        dy = -dy;
+    if((y >= rcbY && y < rcbY + paddleHeight) && (x > rcbX - 5 && x < rcbX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 }
 
@@ -177,8 +197,11 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == lwbY) && (x > lwbX && x < lwbX + paddleWidth) && dy >= 0) {
-        dy = -dy;
+    if((y >= lwbY && y < lwbY + paddleHeight) && (x > lwbX - 5  && x < lwbX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
 
@@ -189,8 +212,11 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == lcmY) && (x > lcmX && x < lcmX + paddleWidth) && dy >= 0) {
-        dy = -dy;
+    if((y >= lcmY && y < lcmY + paddleHeight) && (x > lcmX - 5 && x < lcmX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -200,8 +226,11 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == rcmY) && (x > rcmX && x < rcmX + paddleWidth) && dy >= 0) {
-        dy = -dy;
+    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rcmX - 5 && x < rcmX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -211,8 +240,11 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == rwbY) && (x > rwbX && x < rwbX + paddleWidth) && dy >= 0) {
-        dy = -dy;
+    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rwbX - 5 && x < rwbX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
   
 }
@@ -226,8 +258,11 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == lwY) && (x > lwX && x < lwX + paddleWidth) && dy >= 0) {
-        dy = -dy;
+    if((y >= lwY && y < lwY + paddleHeight) && (x > lwX - 5 && x < lwX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -237,8 +272,11 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == cfY) && (x > cfX && x < cfX + paddleWidth) && dy >= 0) {
-        dy = -dy;
+    if((y >= cfY && y < cfY + paddleHeight) && (x > cfX - 5 && x < cfX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -248,8 +286,11 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y == rwY) && (x > rwX && x < rwX + paddleWidth) && dy >= 0) {
-        dy = -dy;
+    if((y >= rwY && y < rwY + paddleHeight) && (x > rwX - 5 && x < rwX + paddleWidth + 5) ) {
+        if(dy < 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 }
 function drawPlayers() {
@@ -261,10 +302,10 @@ function drawPlayers() {
     drawStrikers();
 
     //away
-    drawAwayGoalkeeper();
-    drawAwayDefenders();
-    drawAwayMidfielders();
-    drawAwayStrikers();
+     drawAwayGoalkeeper();
+     drawAwayDefenders();
+     drawAwayMidfielders();
+     drawAwayStrikers();
 }
 
 function drawAwayGoalkeeper() {
@@ -276,8 +317,11 @@ function drawAwayGoalkeeper() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == gkY) && (x > gkX && x < gkX + paddleWidth) && dy <= 0) {
-        dy = -dy;
+    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX - 5 && x < gkX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 }
 
@@ -290,9 +334,11 @@ function drawAwayDefenders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == lcbY) && (x > lcbX && x < lcbX + paddleWidth) && dy <= 0) {
-        if(dy<= 0)
-        dy = -dy;
+    if((y >= lcbY && y < lcbY + paddleHeight) && (x > lcbX - 5 && x < lcbX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -302,8 +348,11 @@ function drawAwayDefenders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == rcbY) && (x > rcbX && x < rcbX + paddleWidth) && dy <= 0) {
-        dy = -dy;
+    if((y >= rcbY && y < rcbY + paddleHeight) && (x > rcbX - 5 && x < rcbX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 }
 
@@ -317,8 +366,11 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == lwbY) && (x > lwbX && x < lwbX + paddleWidth) && dy <= 0) {
-        dy = -dy;
+    if((y >= lwbY && y < lwbY + paddleHeight) && (x > lwbX - 5  && x < lwbX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
 
@@ -329,8 +381,11 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == lcmY) && (x > lcmX && x < lcmX + paddleWidth) && dy <= 0) {
-        dy = -dy;
+    if((y >= lcmY && y < lcmY + paddleHeight) && (x > lcmX - 5 && x < lcmX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -340,8 +395,11 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == rcmY) && (x > rcmX && x < rcmX + paddleWidth) && dy <= 0) {
-        dy = -dy;
+    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rcmX - 5 && x < rcmX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -351,8 +409,11 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == rwbY) && (x > rwbX && x < rwbX + paddleWidth) && dy <= 0) {
-        dy = -dy;
+    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rwbX - 5 && x < rwbX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
   
 }
@@ -366,8 +427,11 @@ function drawAwayStrikers() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == lwY) && (x > lwX && x < lwX + paddleWidth) && dy <= 0) {
-        dy = -dy;
+    if((y >= lwY && y < lwY + paddleHeight) && (x > lwX - 5 && x < lwX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -377,8 +441,11 @@ function drawAwayStrikers() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == cfY) && (x > cfX && x < cfX + paddleWidth) && dy <= 0) {
-        dy = -dy;
+    if((y >= cfY && y < cfY + paddleHeight) && (x > cfX - 5 && x < cfX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 
     ctx.beginPath();
@@ -388,8 +455,11 @@ function drawAwayStrikers() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y == rwY) && (x > rwX && x < rwX + paddleWidth) && dy <= 0) {
-        dy = -dy;
+    if((y >= rwY && y < rwY + paddleHeight) && (x > rwX - 5 && x < rwX + paddleWidth + 5) ) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
     }
 }
 
