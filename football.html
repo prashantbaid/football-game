@@ -6,14 +6,26 @@
 
     <style>
     canvas { background: #eee; }
+    #score {
+        margin-left: 320px;
+        margin-top: -484px;
+        width: 120px;
+        font-family: verdana;
+        padding: 5px 5px 5px 5px;
+    }
+    #blue {
+        color: #0095DD;
+    }
+    #red {
+        color: #E03333;
+    }
     </style>
 </head>
 <body>
 <canvas id="myCanvas" width="320" height="480"></canvas>
 <div id="score">
-<h3>Home : <span id="home"></span></h3>
-<br>
-<h3>Away : <span id="away"></span></h3>
+<h3 id = "blue">Blue : <span id="home">0</span></h3>
+<h3 id = "red">Red : <span id="away">0</span></h3>
 </div>
 </body>
     <script>
