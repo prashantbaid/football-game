@@ -9,3 +9,6 @@ A football game written in javascript.
 ## Red Team ##
 * a - left
 * d - right
+
+# License #
+MIT License
