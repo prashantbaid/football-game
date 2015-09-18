@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Foosball Game</title>
-
+    <script src="SAT.js"></script>
     <style>
     canvas { 
         background: #27BC3F;
@@ -33,8 +33,8 @@
     <script>
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-var x = canvas.width/2;
-var y = canvas.height/2;
+var x = 10;
+var y = 10;
 var ballRadius = 6;
 var dx = 1;
 var dy = -1;
@@ -44,15 +44,7 @@ var paddleHeight = 10;
 var paddleWidth = 15;
 var paddleX = (canvas.width-paddleWidth);
 var rightPressed = false;
-var leftPressed = false;
-var brickRowCount = 3;
-var brickColumnCount = 5;
-var brickWidth = 75;
-var brickHeight = 20;
-var brickPadding = 10;
-var brickOffsetTop = 30;
-var brickOffsetLeft = 30;
-var bricks = [];
+var leftPressed = false;    
 var goalpostWidth = 75;
 var goalpostHeight = 10;
 var homeScore = 0;
@@ -63,13 +55,21 @@ var leftPressedAway = false;
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
+var V = SAT.Vector;
+var C = SAT.Circle;
+var P = SAT.Polygon;
+
+var circle;
+// A square
+
+
 function drawBall() {
      ctx.beginPath();
      ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-     ctx.fillStyle = "#030303";
+     ctx.fillStyle = "white";
      ctx.fill();
      ctx.closePath();
-
+circle = new C(new V(x,y), ballRadius);
     // ctx.beginPath();
     // //var gphX = paddleX/2;
     // //var gphY = canvas.height - goalpostHeight;
@@ -77,6 +77,26 @@ function drawBall() {
     // ctx.fillStyle = "#030303";
     // ctx.fill();
     // ctx.closePath();
+    ctx.beginPath();
+    //var gphX = paddleX/2;
+    //var gphY = canvas.height - goalpostHeight;
+    ctx.rect(0, 200, canvas.width, canvas.height-200);
+    ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
+ctx.stroke();
+    ctx.closePath();
+            var polygon = new P(new V(0,200), [
+  new V(0,200), new V(320,200), new V(320,480), new V(0,480)
+]);
+  //  ctx.rect(152.5, 410, 167.5 - 152.5, 420-410);
+//console.log('1: (', gkX,  ',' , gkY, ') 2: (', gkX+paddleWidth, ',' , gkY, ') 3: (', gkX+paddleWidth,  ',' , gkY+paddleHeight, ') 4: (', gkX,  ',' ,gkY+paddleHeight, ')');
+//console.log(circle, polygon);
+var response = new SAT.Response();
+var collided = SAT.testPolygonCircle(polygon, circle, response);
+if(collided)
+console.log(circle.pos.x, circle.pos.y, polygon.pos.x, polygon.pos.y);
+//console.log('collided', collided);
+
+    //1: ( 152.5 , 410 ) 2: ( 167.5 , 410 ) 3: ( 167.5 , 420 ) 4: ( 152.5 , 420 )
    
     if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
     dx = -dx;
@@ -91,15 +111,15 @@ function drawBall() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
-    drawPlayers();
-    drawGoalPost();
+ //   drawPlayers();
+  //  drawGoalPost();
   //  console.log('Home: ', homeScore, 'Away: ', awayScore);
     x += dx;
     y += dy;
-    if(rightPressed && paddleX*7/8 + m < canvas.width-paddleWidth) {
+    if(rightPressed && paddleX*3/4 + m < canvas.width-paddleWidth) {
         m += 2;  
     }
-    else if(leftPressed && paddleX*1/8 + m > 0) {
+    else if(leftPressed && paddleX/4 + m > 0) {
         m -= 2;
     }
     // else if(x > canvas.width/2 && paddleX*7/8 + j < canvas.width-paddleWidth) {
@@ -170,14 +190,28 @@ function drawGoalkeeper() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius>= gkY && y + ballRadius< gkY + paddleHeight) && (x > gkX  && x < gkX + paddleWidth ) ) {
+    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX  && x < gkX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
             dy = -dy;
     }
+//     var polygon = new P(new V(gkX,gkY), [
+//   new V(gkX,gkY), new V(gkX+paddleWidth,gkY), new V(gkX+paddleWidth,gkY+paddleHeight), new V(gkX,gkY+paddleHeight)
+// ]);
+
+        var polygon = new P(new V(152.5,410), [
+  new V(152.5,410), new V(167.5,410), new V(167.5,420), new V(152.5,420)
+]);
+  //  ctx.rect(152.5, 410, 167.5 - 152.5, 420-410);
+//console.log('1: (', gkX,  ',' , gkY, ') 2: (', gkX+paddleWidth, ',' , gkY, ') 3: (', gkX+paddleWidth,  ',' , gkY+paddleHeight, ') 4: (', gkX,  ',' ,gkY+paddleHeight, ')');
+//console.log(circle, polygon);
+var response = new SAT.Response();
+var collided = SAT.testPolygonCircle(polygon, circle, response);
+console.log('collided', collided);
 
 }
+
 
 function drawDefenders() {
 
@@ -188,7 +222,7 @@ function drawDefenders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius>= lcbY && y + ballRadius< lcbY + paddleHeight) && (x > lcbX  && x < lcbX + paddleWidth ) ) {
+    if((y >= lcbY && y < lcbY + paddleHeight) && (x > lcbX  && x < lcbX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -202,7 +236,7 @@ function drawDefenders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius>= rcbY && y + ballRadius< rcbY + paddleHeight) && (x > rcbX  && x < rcbX + paddleWidth ) ) {
+    if((y >= rcbY && y < rcbY + paddleHeight) && (x > rcbX  && x < rcbX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -220,7 +254,7 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius>= lwbY  && y + ballRadius < lwbY + paddleHeight) && (x > lwbX   && x < lwbX + paddleWidth ) ) {
+    if((y >= lwbY  && y  < lwbY + paddleHeight) && (x > lwbX   && x < lwbX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -235,7 +269,7 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius >= lcmY && y + ballRadius < lcmY + paddleHeight) && (x > lcmX  && x < lcmX + paddleWidth ) ) {
+    if((y  >= lcmY && y  < lcmY + paddleHeight) && (x > lcmX  && x < lcmX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -249,7 +283,7 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius >= lcmY && y + ballRadius < lcmY + paddleHeight) && (x > rcmX  && x < rcmX + paddleWidth ) ) {
+    if((y  >= lcmY && y  < lcmY + paddleHeight) && (x > rcmX  && x < rcmX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -263,7 +297,7 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius >= lcmY && y+ ballRadius< lcmY + paddleHeight) && (x > rwbX  && x < rwbX + paddleWidth ) ) {
+    if((y  >= lcmY && y< lcmY + paddleHeight) && (x > rwbX  && x < rwbX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -281,7 +315,7 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius>= lwY && y + ballRadius< lwY + paddleHeight) && (x > lwX  && x < lwX + paddleWidth ) ) {
+    if((y >= lwY && y < lwY + paddleHeight) && (x > lwX  && x < lwX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -295,7 +329,7 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius>= cfY && y + ballRadius< cfY + paddleHeight) && (x > cfX  && x < cfX + paddleWidth ) ) {
+    if((y >= cfY && y < cfY + paddleHeight) && (x > cfX  && x < cfX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
@@ -309,7 +343,7 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y + ballRadius>= rwY && y + ballRadius< rwY + paddleHeight) && (x > rwX  && x < rwX + paddleWidth ) ) {
+    if((y >= rwY && y < rwY + paddleHeight) && (x > rwX  && x < rwX + paddleWidth ) ) {
         if(dy < 0)
             dx = -dx;
         else
