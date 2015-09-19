@@ -57,46 +57,26 @@ document.addEventListener("keyup", keyUpHandler, false);
 
 var V = SAT.Vector;
 var C = SAT.Circle;
-var P = SAT.Polygon;
+var B = SAT.Box;
+
 
 var circle;
+var box;
 // A square
 
-
+console.log(canvas.height/2, canvas.width/2);
 function drawBall() {
-     ctx.beginPath();
-     ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-     ctx.fillStyle = "white";
-     ctx.fill();
-     ctx.closePath();
-circle = new C(new V(x,y), ballRadius);
-    // ctx.beginPath();
-    // //var gphX = paddleX/2;
-    // //var gphY = canvas.height - goalpostHeight;
-    // ctx.rect(x, y, ballRadius, ballRadius);
-    // ctx.fillStyle = "#030303";
-    // ctx.fill();
-    // ctx.closePath();
+     // ctx.beginPath();
+     // ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+     // ctx.fillStyle = "white";
+     // ctx.fill();
+     // ctx.closePath();
+circle = new C(new V(x,y), 6);
     ctx.beginPath();
-    //var gphX = paddleX/2;
-    //var gphY = canvas.height - goalpostHeight;
-    ctx.rect(0, 200, canvas.width, canvas.height-200);
-    ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
-ctx.stroke();
+    ctx.arc(x, y, 6, 0, Math.PI*2);
+    ctx.strokeStyle = "rgba(0, 0, 100, 0.5)";
+    ctx.stroke();
     ctx.closePath();
-            var polygon = new P(new V(0,200), [
-  new V(0,200), new V(320,200), new V(320,480), new V(0,480)
-]);
-  //  ctx.rect(152.5, 410, 167.5 - 152.5, 420-410);
-//console.log('1: (', gkX,  ',' , gkY, ') 2: (', gkX+paddleWidth, ',' , gkY, ') 3: (', gkX+paddleWidth,  ',' , gkY+paddleHeight, ') 4: (', gkX,  ',' ,gkY+paddleHeight, ')');
-//console.log(circle, polygon);
-var response = new SAT.Response();
-var collided = SAT.testPolygonCircle(polygon, circle, response);
-if(collided)
-console.log(circle.pos.x, circle.pos.y, polygon.pos.x, polygon.pos.y);
-//console.log('collided', collided);
-
-    //1: ( 152.5 , 410 ) 2: ( 167.5 , 410 ) 3: ( 167.5 , 420 ) 4: ( 152.5 , 420 )
    
     if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
     dx = -dx;
@@ -111,8 +91,8 @@ console.log(circle.pos.x, circle.pos.y, polygon.pos.x, polygon.pos.y);
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
- //   drawPlayers();
-  //  drawGoalPost();
+    drawPlayers();
+    drawGoalPost();
   //  console.log('Home: ', homeScore, 'Away: ', awayScore);
     x += dx;
     y += dy;
@@ -190,26 +170,30 @@ function drawGoalkeeper() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX  && x < gkX + paddleWidth ) ) {
+    box = new B(new V(gkX,gkY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
+
+
+}
+
+function collisionDetection(box) {
+    var response = new SAT.Response();
+    if(SAT.testPolygonCircle(box, circle, response)) {
         if(dy < 0)
             dx = -dx;
         else
             dy = -dy;
     }
-//     var polygon = new P(new V(gkX,gkY), [
-//   new V(gkX,gkY), new V(gkX+paddleWidth,gkY), new V(gkX+paddleWidth,gkY+paddleHeight), new V(gkX,gkY+paddleHeight)
-// ]);
+}
 
-        var polygon = new P(new V(152.5,410), [
-  new V(152.5,410), new V(167.5,410), new V(167.5,420), new V(152.5,420)
-]);
-  //  ctx.rect(152.5, 410, 167.5 - 152.5, 420-410);
-//console.log('1: (', gkX,  ',' , gkY, ') 2: (', gkX+paddleWidth, ',' , gkY, ') 3: (', gkX+paddleWidth,  ',' , gkY+paddleHeight, ') 4: (', gkX,  ',' ,gkY+paddleHeight, ')');
-//console.log(circle, polygon);
-var response = new SAT.Response();
-var collided = SAT.testPolygonCircle(polygon, circle, response);
-console.log('collided', collided);
-
+function collisionDetectionAway(box) {
+    var response = new SAT.Response();
+    if(SAT.testPolygonCircle(box, circle, response)) {
+        if(dy > 0)
+            dx = -dx;
+        else
+            dy = -dy;
+    }
 }
 
 
@@ -222,12 +206,8 @@ function drawDefenders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcbY && y < lcbY + paddleHeight) && (x > lcbX  && x < lcbX + paddleWidth ) ) {
-        if(dy < 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(lcbX,lcbY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
 
     ctx.beginPath();
     var rcbX = paddleX*3/4 + m;
@@ -236,12 +216,8 @@ function drawDefenders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= rcbY && y < rcbY + paddleHeight) && (x > rcbX  && x < rcbX + paddleWidth ) ) {
-        if(dy < 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(rcbX,rcbY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
 }
 
 function drawMidfielders() {
@@ -254,12 +230,8 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= lwbY  && y  < lwbY + paddleHeight) && (x > lwbX   && x < lwbX + paddleWidth ) ) {
-        if(dy < 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(lwbX,lwbY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
 
 
     ctx.beginPath();
@@ -269,12 +241,8 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y  >= lcmY && y  < lcmY + paddleHeight) && (x > lcmX  && x < lcmX + paddleWidth ) ) {
-        if(dy < 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(lcmX,lcmY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
 
     ctx.beginPath();
     var rcmX = paddleX*5/8 + m;
@@ -283,12 +251,8 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y  >= lcmY && y  < lcmY + paddleHeight) && (x > rcmX  && x < rcmX + paddleWidth ) ) {
-        if(dy < 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(rcmX,rcmY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
 
     ctx.beginPath();
     var rwbX = paddleX*7/8 + m;
@@ -297,12 +261,8 @@ function drawMidfielders() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y  >= lcmY && y< lcmY + paddleHeight) && (x > rwbX  && x < rwbX + paddleWidth ) ) {
-        if(dy < 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(rwbX,rwbY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
   
 }
 
@@ -315,12 +275,8 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= lwY && y < lwY + paddleHeight) && (x > lwX  && x < lwX + paddleWidth ) ) {
-        if(dy < 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(lwX,lwY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
 
     ctx.beginPath();
     var cfX = paddleX/2 + m;
@@ -329,12 +285,8 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= cfY && y < cfY + paddleHeight) && (x > cfX  && x < cfX + paddleWidth ) ) {
-        if(dy < 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(cfX,cfY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
 
     ctx.beginPath();
     var rwX = paddleX*3/4 + m;
@@ -343,13 +295,11 @@ function drawStrikers() {
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
-    if((y >= rwY && y < rwY + paddleHeight) && (x > rwX  && x < rwX + paddleWidth ) ) {
-        if(dy < 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(rwX,rwY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetection(box);
+
 }
+
 function drawPlayers() {
 
     //home
@@ -374,12 +324,9 @@ function drawAwayGoalkeeper() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= gkY && y < gkY + paddleHeight) && (x > gkX  && x < gkX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(gkX,gkY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
+    
     if(y + 10 == gkY || y - 10 == gkY) {
         if(x > gkX)
             j +=10;
@@ -397,13 +344,8 @@ function drawAwayDefenders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcbY && y < lcbY + paddleHeight) && (x > lcbX  && x < lcbX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
-
+    box = new B(new V(lcbX,lcbY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
 
     ctx.beginPath();
     var rcbX = paddleX*3/4 + j;
@@ -412,12 +354,9 @@ function drawAwayDefenders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= rcbY && y < rcbY + paddleHeight) && (x > rcbX  && x < rcbX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(rcbX,rcbY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
+
     if(y + 10 == rcbY || y - 10 == rcbY) {
         if(x > lcbX)
             j +=10;
@@ -440,13 +379,8 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lwbY && y < lwbY + paddleHeight) && (x > lwbX   && x < lwbX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
-
+    box = new B(new V(lwbX,lwbY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
 
     ctx.beginPath();
     var lcmX = paddleX*3/8 + j;
@@ -455,12 +389,8 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcmY && y < lcmY + paddleHeight) && (x > lcmX  && x < lcmX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(lcmX,lcmY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
 
     ctx.beginPath();
     var rcmX = paddleX*5/8 + j;
@@ -469,12 +399,8 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rcmX  && x < rcmX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(rcmX,rcmY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
 
     ctx.beginPath();
     var rwbX = paddleX*7/8 + j;
@@ -483,12 +409,9 @@ function drawAwayMidfielders() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lcmY && y < lcmY + paddleHeight) && (x > rwbX  && x < rwbX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(rwbX,rwbY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
+
     if(y + 10 == rwbY || y - 10 == rwbY) {
         if(x > lwbX)
             j +=10;
@@ -519,12 +442,8 @@ function drawAwayStrikers() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= lwY && y < lwY + paddleHeight) && (x > lwX  && x < lwX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(lwX,lwY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
 
     ctx.beginPath();
     var cfX = paddleX/2 + j;
@@ -533,12 +452,8 @@ function drawAwayStrikers() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= cfY && y < cfY + paddleHeight) && (x > cfX  && x < cfX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
-    }
+    box = new B(new V(cfX,cfY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
 
     ctx.beginPath();
     var rwX = paddleX*3/4 + j;
@@ -547,11 +462,8 @@ function drawAwayStrikers() {
     ctx.fillStyle = "#E03333";
     ctx.fill();
     ctx.closePath();
-    if((y >= rwY && y < rwY + paddleHeight) && (x > rwX && x < rwX + paddleWidth ) ) {
-        if(dy > 0)
-            dx = -dx;
-        else
-            dy = -dy;
+    box = new B(new V(rwX,rwY), paddleWidth, paddleHeight).toPolygon();
+    collisionDetectionAway(box);
 
     if(y + 10 == rwY || y - 10 == rwY) {
         if(x > lwX)
