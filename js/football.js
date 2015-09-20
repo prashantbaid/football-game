@@ -115,9 +115,9 @@ function startTimer(duration) {
             gameOver = true;
             clearInterval(countdown);
             if (homeScore > awayScore)
-                updateStatus('GAME OVER!<br>Liverpool Won!');
+                updateStatus('GAME OVER!<br>Astrid Won!');
             else if (awayScore > homeScore)
-                updateStatus('GAME OVER!<br>Juventus Won!');
+                updateStatus('GAME OVER!<br>Glassie Won!');
             else
                 updateStatus('GAME OVER!<br>Draw!')
         }
@@ -197,7 +197,7 @@ function drawGoalPost() {
     box = new B(new V(gphX, gphY), goalpostWidth, goalpostHeight).toPolygon();
     if (goalDetection(box)) {
         updateScore('home');
-        updateStatus('GOAL!<br>Juventus Score!');
+        updateStatus('GOAL!<br>Glassie Score!');
         removeStatus();
         resetBall();
         setDelay();
@@ -214,7 +214,7 @@ function drawGoalPost() {
     box = new B(new V(gpaX, gpaY), goalpostWidth, goalpostHeight).toPolygon();
     if (goalDetection(box)) {
         updateScore('away');
-        updateStatus('GOAL!<br>Liverpool Score!');
+        updateStatus('GOAL!<br>Astrid Score!');
         removeStatus();
         resetBall();
         setDelay();
