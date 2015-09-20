@@ -17,6 +17,8 @@ var dy = -3;
 var m = 0;
 var j = 0;
 
+var aiSpeed = 1.25;
+
 //set paddle dimensions
 var paddleHeight = 10;
 var paddleWidth = 30;
@@ -82,9 +84,10 @@ function init() {
 
 function setInitialDelay() {
     setTimeout(function() {
+        startTimer(60 * 2);
         drawFlag = true;
         window.requestAnimationFrame(draw);
-        startTimer(60 * 2);
+        updateStatus('You are team <br> in <span style="color:red">RED</span>');
     }, 1500);
 }
 
@@ -147,7 +150,11 @@ function drawBall() {
     ctx.closePath();
     circle = new C(new V(x, y), 6);
     if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-        dx = -dx;
+            dx = -dx;
+            if(x<0)
+                x=0;
+            if(x>canvas.width)
+                x = canvas.width; 
     }
     if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
         dy = -dy;
@@ -341,9 +348,9 @@ function drawAwayGoalkeeper() {
     collisionDetectionAway(box, gkX);
 
     if (x > gkX && gkX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (gkX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
 
 }
 
@@ -363,13 +370,13 @@ function drawAwayDefenders() {
     collisionDetectionAway(box, rcbX);
 
     if (x > lcbX && lcbX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (lcbX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
     if (x > rcbX && rcbX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (rcbX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
 }
 
 function drawAwayMidfielders() {
@@ -401,21 +408,21 @@ function drawAwayMidfielders() {
     collisionDetectionAway(box, rwbX);
 
     if (x > lwbX && lwbX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (lwbX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
     if (x > rwbX && rwbX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (rwbX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
     if (x > rcmX && rcmX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (rcmX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
     if (x > lcmX && lcmX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (lcmX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
 }
 
 
@@ -446,17 +453,17 @@ function drawAwayStrikers() {
 
     // if(y + 10 == rwY || y - 10 == rwY) {
     if (x > lwX && lwX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (lwX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
     if (x > rwX && rwX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (rwX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
     if (x > cfX && cfX < paddleX * 3 / 4)
-        j += 1;
+        j += aiSpeed;
     else if (cfX > paddleX * 1 / 4)
-        j -= 1;
+        j -= aiSpeed;
     //}
 
 
