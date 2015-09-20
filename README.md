@@ -1,9 +1,5 @@
 # football-game
-A football game written in javascript.
+A foosball game written in vanilla javascript using HTML5 canvas.
 
-# Keyboard Instructions #
-## You are Blue Team ##
-* left arrow -- left
-* right arrow -- right
-
+# License
 MIT License
