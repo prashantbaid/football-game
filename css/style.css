@@ -7,7 +7,7 @@
          position: relative;
      }
      canvas {
-         background: url("pitch3.png") center;
+         background: url("../img/pitch3.png") center;
          float: left;
          z-index: 1;
      }
@@ -15,7 +15,7 @@
          z-index: 2;
          width: 720px;
          height: 720px;
-         background-image: url('splash.png');
+         background-image: url('../img/splash.png');
          position: absolute;
          font-family: verdana;
          color: white;
@@ -24,13 +24,13 @@
          z-index: -1;
          width: 480px;
          height: 720px;
-         background-image: url('splash.png');
+         background-image: url('../img/splash.png');
          position: absolute;
          font-family: verdana;
          color: white;
      }
      #score {
-         background-image: url('background.png');
+         background-image: url('../img/background.png');
          float: right;
          width: 240px;
          height: 690px;
