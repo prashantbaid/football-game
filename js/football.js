@@ -269,69 +269,67 @@ function drawGoalkeeper() {
 
 function drawDefenders() {
 
+    var defenderHeight = canvas.height * 13 / 16 - paddleHeight;
+    drawRods(defenderHeight);
+
     var lcbX = paddleX / 4 + m;
-    var lcbY = canvas.height * 13 / 16 - paddleHeight;
-    drawRods(lcbY);
-    ctx.drawImage(homePlayer, lcbX, lcbY - 15, playerWidth, playerHeight);
-    box = new B(new V(lcbX, lcbY), playerWidth, paddleHeight).toPolygon();
-    collisionDetection(box, lcbX);
+    ctx.drawImage(homePlayer, lcbX, defenderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(lcbX, defenderHeight), playerWidth, paddleHeight).toPolygon();
+    collisionDetection(box, lcbX, '');
 
     var rcbX = paddleX * 3 / 4 + m;
-    var rcbY = canvas.height * 13 / 16 - paddleHeight;
-    ctx.drawImage(homePlayer, rcbX, rcbY - 15, playerWidth, playerHeight);
-    box = new B(new V(rcbX, rcbY), playerWidth, paddleHeight).toPolygon();
-    collisionDetection(box, rcbX);
+    ctx.drawImage(homePlayer, rcbX, defenderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(rcbX, defenderHeight), playerWidth, paddleHeight).toPolygon();
+    collisionDetection(box, rcbX, 'rcbx');
 }
 
 function drawMidfielders() {
 
     //midfielders
+    var midfielderHeight = canvas.height * 5 / 8 - paddleHeight;
+    drawRods(midfielderHeight);
+
     var lwbX = paddleX * 1 / 8 + m;
-    var lwbY = canvas.height * 5 / 8 - paddleHeight;
-    drawRods(lwbY);
-    ctx.drawImage(homePlayer, lwbX, lwbY - 15, playerWidth, playerHeight);
-    box = new B(new V(lwbX, lwbY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(homePlayer, lwbX, midfielderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(lwbX, midfielderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetection(box, lwbX);
 
     var lcmX = paddleX * 3 / 8 + m;
-    var lcmY = canvas.height * 5 / 8 - paddleHeight;
-    ctx.drawImage(homePlayer, lcmX, lcmY - 15, playerWidth, playerHeight);
-    box = new B(new V(lcmX, lcmY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(homePlayer, lcmX, midfielderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(lcmX, midfielderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetection(box, lcmX);
 
     var rcmX = paddleX * 5 / 8 + m;
-    var rcmY = canvas.height * 5 / 8 - paddleHeight;
-    ctx.drawImage(homePlayer, rcmX, rcmY - 15, playerWidth, playerHeight);
-    box = new B(new V(rcmX, rcmY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(homePlayer, rcmX, midfielderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(rcmX, midfielderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetection(box, rcmX);
 
     var rwbX = paddleX * 7 / 8 + m;
-    var rwbY = canvas.height * 5 / 8 - paddleHeight;
-    ctx.drawImage(homePlayer, rwbX, rwbY - 15, playerWidth, playerHeight);
-    box = new B(new V(rwbX, rwbY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(homePlayer, rwbX, midfielderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(rwbX, midfielderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetection(box, rwbX);
 
 }
 
 function drawStrikers() {
     //attackers
+
+    var strikerHeight = canvas.height * 9 / 32 - paddleHeight;
+    drawRods(strikerHeight);
+
     var lwX = paddleX / 4 + m;
-    var lwY = canvas.height * 9 / 32 - paddleHeight;
-    drawRods(lwY);
-    ctx.drawImage(homePlayer, lwX, lwY - 15, playerWidth, playerHeight);
-    box = new B(new V(lwX, lwY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(homePlayer, lwX, strikerHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(lwX, strikerHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetection(box, lwX);
 
     var cfX = paddleX / 2 + m;
-    var cfY = canvas.height * 9 / 32 - paddleHeight;
-    ctx.drawImage(homePlayer, cfX, cfY - 15, playerWidth, playerHeight);
-    box = new B(new V(cfX, cfY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(homePlayer, cfX, strikerHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(cfX, strikerHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetection(box, cfX);
 
     var rwX = paddleX * 3 / 4 + m;
-    var rwY = canvas.height * 9 / 32 - paddleHeight;
-    ctx.drawImage(homePlayer, rwX, rwY - 15, playerWidth, playerHeight);
-    box = new B(new V(rwX, rwY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(homePlayer, rwX, strikerHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(rwX, strikerHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetection(box, rwX);
 
 }
@@ -356,17 +354,17 @@ function drawAwayGoalkeeper() {
 
 function drawAwayDefenders() {
 
-    var lcbX = paddleX / 4 + j;
-    var lcbY = canvas.height * 3 / 16 - paddleHeight;
-    drawRods(lcbY);
-    ctx.drawImage(awayPlayer, lcbX, lcbY - 15, playerWidth, playerHeight);
-    box = new B(new V(lcbX, lcbY), playerWidth, paddleHeight).toPolygon();
+    var defenderHeight = canvas.height * 3 / 16 - paddleHeight;
+    drawRods(defenderHeight);
+
+    var lcbX = paddleX / 4 + j; 
+    ctx.drawImage(awayPlayer, lcbX, defenderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(lcbX, defenderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetectionAway(box, lcbX);
 
     var rcbX = paddleX * 3 / 4 + j;
-    var rcbY = canvas.height * 3 / 16 - paddleHeight;
-    ctx.drawImage(awayPlayer, rcbX, rcbY - 15, playerWidth, playerHeight);
-    box = new B(new V(rcbX, rcbY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(awayPlayer, rcbX, defenderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(rcbX, defenderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetectionAway(box, rcbX);
 
     if (x > lcbX && lcbX < paddleX * 3 / 4)
@@ -382,29 +380,27 @@ function drawAwayDefenders() {
 function drawAwayMidfielders() {
 
     //midfielders
+    var midfielderHeight = canvas.height * 3 / 8 - paddleHeight;
+    drawRods(midfielderHeight);
+
     var lwbX = paddleX * 1 / 8 + j;
-    var lwbY = canvas.height * 3 / 8 - paddleHeight;
-    drawRods(lwbY)
-    ctx.drawImage(awayPlayer, lwbX, lwbY - 15, playerWidth, playerHeight);
-    box = new B(new V(lwbX, lwbY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(awayPlayer, lwbX, midfielderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(lwbX, midfielderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetectionAway(box, lwbX);
 
     var lcmX = paddleX * 3 / 8 + j;
-    var lcmY = canvas.height * 3 / 8 - paddleHeight;
-    ctx.drawImage(awayPlayer, lcmX, lcmY - 15, playerWidth, playerHeight);
-    box = new B(new V(lcmX, lcmY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(awayPlayer, lcmX, midfielderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(lcmX, midfielderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetectionAway(box, lcmX);
 
     var rcmX = paddleX * 5 / 8 + j;
-    var rcmY = canvas.height * 3 / 8 - paddleHeight;
-    ctx.drawImage(awayPlayer, rcmX, rcmY - 15, playerWidth, playerHeight);
-    box = new B(new V(rcmX, rcmY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(awayPlayer, rcmX, midfielderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(rcmX, midfielderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetectionAway(box, rcmX);
 
     var rwbX = paddleX * 7 / 8 + j;
-    var rwbY = canvas.height * 3 / 8 - paddleHeight;
-    ctx.drawImage(awayPlayer, rwbX, rwbY - 15, playerWidth, playerHeight);
-    box = new B(new V(rwbX, rwbY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(awayPlayer, rwbX, midfielderHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(rwbX, midfielderHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetectionAway(box, rwbX);
 
     if (x > lwbX && lwbX < paddleX * 3 / 4)
@@ -427,31 +423,26 @@ function drawAwayMidfielders() {
 
 
 function drawAwayStrikers() {
+
     //attackers
-    ctx.beginPath();
+    var strikerHeight = canvas.height * 23 / 32 - paddleHeight;
+    drawRods(strikerHeight);
+
     var lwX = paddleX / 4 + j;
-    var lwY = canvas.height * 23 / 32 - paddleHeight;
-    drawRods(lwY);
-    ctx.drawImage(awayPlayer, lwX, lwY - 15, playerWidth, playerHeight);
-    box = new B(new V(lwX, lwY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(awayPlayer, lwX, strikerHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(lwX, strikerHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetectionAway(box, lwX);
 
-    ctx.beginPath();
     var cfX = paddleX / 2 + j;
-    var cfY = canvas.height * 23 / 32 - paddleHeight;
-    ctx.drawImage(awayPlayer, cfX, cfY - 15, playerWidth, playerHeight);
-    box = new B(new V(cfX, cfY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(awayPlayer, cfX, strikerHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(cfX, strikerHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetectionAway(box, cfX);
 
-    ctx.beginPath();
     var rwX = paddleX * 3 / 4 + j;
-    var rwY = canvas.height * 23 / 32 - paddleHeight;
-    ctx.drawImage(awayPlayer, rwX, rwY - 15, playerWidth, playerHeight);
-    box = new B(new V(rwX, rwY), playerWidth, paddleHeight).toPolygon();
+    ctx.drawImage(awayPlayer, rwX, strikerHeight - 15, playerWidth, playerHeight);
+    box = new B(new V(rwX, strikerHeight), playerWidth, paddleHeight).toPolygon();
     collisionDetectionAway(box, rwX);
 
-
-    // if(y + 10 == rwY || y - 10 == rwY) {
     if (x > lwX && lwX < paddleX * 3 / 4)
         j += aiSpeed;
     else if (lwX > paddleX * 1 / 4)
@@ -464,8 +455,6 @@ function drawAwayStrikers() {
         j += aiSpeed;
     else if (cfX > paddleX * 1 / 4)
         j -= aiSpeed;
-    //}
-
 
 }
 
